@@ -1,6 +1,6 @@
 package com.example.conveyor.exceptions;
 
-public class AgeException extends Exception {
+public class AgeException extends RuntimeException {
     public AgeException() {
     }
     public AgeException(String message) {

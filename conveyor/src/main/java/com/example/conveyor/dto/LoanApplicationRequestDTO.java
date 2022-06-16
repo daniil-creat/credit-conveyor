@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.validation.constraints.Email;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
@@ -31,8 +32,7 @@ public class LoanApplicationRequestDTO {
             message = "it should be from 2 to 30 Latin characters")
     private String middleName;
 
-    @Pattern(regexp = "[\\w\\.]{2,50}@[\\w\\.]{2,20}",
-            message = "must be [from 2 to 50 characters]@[from 2 to 30 characters]")
+    @Email(message = "must be [from 2 to 50 characters]@[from 2 to 30 characters]")
     private String email;
 
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
