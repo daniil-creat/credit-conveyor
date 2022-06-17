@@ -1,8 +1,11 @@
 package com.example.conveyor.controller;
 
-import com.example.conveyor.dto.*;
-import com.example.conveyor.services.serviceImpl.PrescoringServiceImpl;
-import com.example.conveyor.services.serviceImpl.ScoringServiceImpl;
+import com.example.conveyor.dto.CreditDTO;
+import com.example.conveyor.dto.LoanApplicationRequestDTO;
+import com.example.conveyor.dto.LoanOfferDTO;
+import com.example.conveyor.dto.ScoringDataDTO;
+import com.example.conveyor.services.PrescoringService;
+import com.example.conveyor.services.ScoringServcie;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,17 +20,17 @@ import java.util.List;
 public class ConveyorController {
 
     @Autowired
-    private ScoringServiceImpl scoringService;
+    private ScoringServcie scoringService;
     @Autowired
-    private PrescoringServiceImpl prescoringService;
+    private PrescoringService prescoringService;
 
     @PostMapping("/offers")
-    public Wrapper<List<LoanOfferDTO>> differentOffersOfLoanConditions(@RequestBody @Valid LoanApplicationRequestDTO loanApplicationRequestDTO) throws Exception {
-        return new Wrapper<>(prescoringService.getLoanOffers(loanApplicationRequestDTO));
+    public List<LoanOfferDTO> differentOffersOfLoanConditions(@RequestBody @Valid LoanApplicationRequestDTO loanApplicationRequestDTO) throws Exception {
+        return prescoringService.getLoanOffers(loanApplicationRequestDTO);
     }
 
     @PostMapping("/calculation")
-    public Wrapper<CreditDTO> calculationOfFullLoanParameters(@RequestBody @Valid ScoringDataDTO scoringDataDTO) throws Exception {
-        return new Wrapper<>(scoringService.getCredit(scoringDataDTO));
+    public CreditDTO calculationOfFullLoanParameters(@RequestBody @Valid ScoringDataDTO scoringDataDTO) throws Exception {
+        return scoringService.getCredit(scoringDataDTO);
     }
 }
