@@ -1,6 +1,8 @@
 
 u
 Econveyor/src/main/java/com/example/conveyor/config/SwaggerConfig.java,8\d\8d7bce8411eff00b7c2a9078dbadf278ca1daf4a
+m
+=conveyor/src/main/java/com/example/conveyor/enums/Gender.java,b\8\b8caeb9411432a9d03a9c43697ae4a3a01e5dd41
 t
 Dconveyor/src/main/java/com/example/conveyor/enums/MaritalStatus.java,f\6\f649949d0df1299613ecee19f286fb37ac838701
 o

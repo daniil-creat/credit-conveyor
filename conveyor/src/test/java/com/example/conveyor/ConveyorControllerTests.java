@@ -60,7 +60,7 @@ public class ConveyorControllerTests {
         jsonScoringData.put("firstName", "Daniil");
         jsonScoringData.put("lastName", "Kalimov");
         jsonScoringData.put("middleName", "Valeryevich");
-        jsonScoringData.put("gender", "MALE");
+        jsonScoringData.put("gender", "MAIL");
         jsonScoringData.put("birthdate", "1996-03-08");
         jsonScoringData.put("passportSeries", "4010");
         jsonScoringData.put("passportNumber", "524201");
@@ -75,105 +75,105 @@ public class ConveyorControllerTests {
 
         loanOffers = "[\n" +
                 "  {\n" +
-                "    \"applicationId\": 1,\n" +
-                "    \"requestedAmount\": 200000,\n" +
-                "    \"totalAmount\": 207120.00,\n" +
-                "    \"term\": 6,\n" +
-                "    \"monthlyPayment\": 34520.00,\n" +
+                "    \"totalAmount\": 207120.0,\n" +
+                "    \"isSalaryClient\": false,\n" +
+                "    \"monthlyPayment\": 34520.0,\n" +
                 "    \"rate\": 12,\n" +
-                "    \"isInsuranceEnabled\": false,\n" +
-                "    \"isSalaryClient\": false\n" +
+                "    \"requestedAmount\": 200000,\n" +
+                "    \"term\": 6,\n" +
+                "    \"applicationId\": 1,\n" +
+                "    \"isInsuranceEnabled\": false\n" +
                 "  },\n" +
                 "  {\n" +
-                "    \"applicationId\": 2,\n" +
-                "    \"requestedAmount\": 200000,\n" +
-                "    \"totalAmount\": 206520.00,\n" +
-                "    \"term\": 6,\n" +
-                "    \"monthlyPayment\": 34420.00,\n" +
+                "    \"totalAmount\": 206520.0,\n" +
+                "    \"isSalaryClient\": true,\n" +
+                "    \"monthlyPayment\": 34420.0,\n" +
                 "    \"rate\": 11,\n" +
-                "    \"isInsuranceEnabled\": false,\n" +
-                "    \"isSalaryClient\": true\n" +
+                "    \"requestedAmount\": 200000,\n" +
+                "    \"term\": 6,\n" +
+                "    \"applicationId\": 2,\n" +
+                "    \"isInsuranceEnabled\": false\n" +
                 "  },\n" +
                 "  {\n" +
-                "    \"applicationId\": 3,\n" +
-                "    \"requestedAmount\": 200000,\n" +
-                "    \"totalAmount\": 206346.60,\n" +
-                "    \"term\": 6,\n" +
-                "    \"monthlyPayment\": 34391.10,\n" +
+                "    \"totalAmount\": 206346.6,\n" +
+                "    \"isSalaryClient\": false,\n" +
+                "    \"monthlyPayment\": 34220.0,\n" +
                 "    \"rate\": 9,\n" +
-                "    \"isInsuranceEnabled\": true,\n" +
-                "    \"isSalaryClient\": false\n" +
+                "    \"requestedAmount\": 200000,\n" +
+                "    \"term\": 6,\n" +
+                "    \"applicationId\": 3,\n" +
+                "    \"isInsuranceEnabled\": true\n" +
                 "  },\n" +
                 "  {\n" +
-                "    \"applicationId\": 4,\n" +
-                "    \"requestedAmount\": 200000,\n" +
-                "    \"totalAmount\": 205743.60,\n" +
-                "    \"term\": 6,\n" +
-                "    \"monthlyPayment\": 34290.60,\n" +
+                "    \"totalAmount\": 205743.6,\n" +
+                "    \"isSalaryClient\": true,\n" +
+                "    \"monthlyPayment\": 34120.0,\n" +
                 "    \"rate\": 8,\n" +
-                "    \"isInsuranceEnabled\": true,\n" +
-                "    \"isSalaryClient\": true\n" +
+                "    \"requestedAmount\": 200000,\n" +
+                "    \"term\": 6,\n" +
+                "    \"applicationId\": 4,\n" +
+                "    \"isInsuranceEnabled\": true\n" +
                 "  }\n" +
                 "]";
 
         credit = "{\n" +
-                "  \"amount\": 207120.00,\n" +
-                "  \"term\": 6,\n" +
-                "  \"monthlyPayment\": 34520.00,\n" +
-                "  \"rate\": 12,\n" +
-                "  \"psk\": 3.56,\n" +
-                "  \"isInsuranceEnabled\": false,\n" +
+                "  \"amount\": 207120.0,\n" +
                 "  \"isSalaryClient\": false,\n" +
+                "  \"monthlyPayment\": 34520.0,\n" +
+                "  \"rate\": 12,\n" +
                 "  \"paymentSchedule\": [\n" +
                 "    {\n" +
-                "      \"number\": 1,\n" +
                 "      \"date\": \"" + date.plusMonths(1) + "\",\n" +
-                "      \"totalPayment\": 34520.00,\n" +
-                "      \"interestPayment\": 2071.20,\n" +
-                "      \"debtPayment\": 32448.80,\n" +
-                "      \"remainingDebt\": 172600.00\n" +
+                "      \"interestPayment\": 2071.2,\n" +
+                "      \"number\": 1,\n" +
+                "      \"totalPayment\": 34520.0,\n" +
+                "      \"debtPayment\": 32448.8,\n" +
+                "      \"remainingDebt\": 172600.0\n" +
                 "    },\n" +
                 "    {\n" +
-                "      \"number\": 2,\n" +
                 "      \"date\": \"" + date.plusMonths(2) + "\",\n" +
-                "      \"totalPayment\": 34520.00,\n" +
-                "      \"interestPayment\": 1726.00,\n" +
-                "      \"debtPayment\": 32794.00,\n" +
-                "      \"remainingDebt\": 138080.00\n" +
+                "      \"interestPayment\": 1726.0,\n" +
+                "      \"number\": 2,\n" +
+                "      \"totalPayment\": 34520.0,\n" +
+                "      \"debtPayment\": 32794.0,\n" +
+                "      \"remainingDebt\": 138080.0\n" +
                 "    },\n" +
                 "    {\n" +
-                "      \"number\": 3,\n" +
                 "      \"date\": \"" + date.plusMonths(3) + "\",\n" +
-                "      \"totalPayment\": 34520.00,\n" +
-                "      \"interestPayment\": 1380.80,\n" +
-                "      \"debtPayment\": 33139.20,\n" +
-                "      \"remainingDebt\": 103560.00\n" +
+                "      \"interestPayment\": 1380.8,\n" +
+                "      \"number\": 3,\n" +
+                "      \"totalPayment\": 34520.0,\n" +
+                "      \"debtPayment\": 33139.2,\n" +
+                "      \"remainingDebt\": 103560.0\n" +
                 "    },\n" +
                 "    {\n" +
-                "      \"number\": 4,\n" +
                 "      \"date\": \"" + date.plusMonths(4) + "\",\n" +
-                "      \"totalPayment\": 34520.00,\n" +
-                "      \"interestPayment\": 1035.60,\n" +
-                "      \"debtPayment\": 33484.40,\n" +
-                "      \"remainingDebt\": 69040.00\n" +
+                "      \"interestPayment\": 1035.6,\n" +
+                "      \"number\": 4,\n" +
+                "      \"totalPayment\": 34520.0,\n" +
+                "      \"debtPayment\": 33484.4,\n" +
+                "      \"remainingDebt\": 69040.0\n" +
                 "    },\n" +
                 "    {\n" +
-                "      \"number\": 5,\n" +
                 "      \"date\": \"" + date.plusMonths(5) + "\",\n" +
-                "      \"totalPayment\": 34520.00,\n" +
-                "      \"interestPayment\": 690.40,\n" +
-                "      \"debtPayment\": 33829.60,\n" +
-                "      \"remainingDebt\": 34520.00\n" +
+                "      \"interestPayment\": 690.4,\n" +
+                "      \"number\": 5,\n" +
+                "      \"totalPayment\": 34520.0,\n" +
+                "      \"debtPayment\": 33829.6,\n" +
+                "      \"remainingDebt\": 34520.0\n" +
                 "    },\n" +
                 "    {\n" +
-                "      \"number\": 6,\n" +
                 "      \"date\": \"" + date.plusMonths(6) + "\",\n" +
-                "      \"totalPayment\": 34520.00,\n" +
-                "      \"interestPayment\": 345.20,\n" +
-                "      \"debtPayment\": 34174.80,\n" +
-                "      \"remainingDebt\": 0.00\n" +
+                "      \"interestPayment\": 345.2,\n" +
+                "      \"number\": 6,\n" +
+                "      \"totalPayment\": 34520.0,\n" +
+                "      \"debtPayment\": 34174.8,\n" +
+                "      \"remainingDebt\": 0.0\n" +
                 "    }\n" +
-                "  ]\n" +
+                "  ],\n" +
+                "  \"psk\": 3.56,\n" +
+                "  \"term\": 6,\n" +
+                "  \"isInsuranceEnabled\": false\n" +
                 "}";
 
     }
@@ -184,11 +184,14 @@ public class ConveyorControllerTests {
         MvcResult mvcResult = this.mockMvc.perform(post("/conveyor/offers")
                         .contentType(MediaType.APPLICATION_JSON).content(jsonLoanApplicationString))
                 .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(true))
+                .andExpect(jsonPath("$.error").isEmpty())
                 .andReturn();
 
         String responce = mvcResult.getResponse().getContentAsString();
         JSONParser jsonParser = new JSONParser();
-        assertThat(responce).isEqualTo(loanOffers.replaceAll("\\s+", ""));
+        JSONObject jsonObjectResponce = (JSONObject) jsonParser.parse(responce);
+        assertThat(jsonObjectResponce.get("result").toString()).isEqualTo(loanOffers.replaceAll("\\s+", ""));
     }
 
     @Test
@@ -210,10 +213,14 @@ public class ConveyorControllerTests {
         MvcResult mvcResult = this.mockMvc.perform(post("/conveyor/calculation")
                         .contentType(MediaType.APPLICATION_JSON).content(jsonScoringDataString))
                 .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(true))
+                .andExpect(jsonPath("$.error").isEmpty())
                 .andReturn();
 
         String responce = mvcResult.getResponse().getContentAsString();
-        assertThat(responce).isEqualTo(credit.replaceAll("\\s+", ""));
+        JSONParser jsonParser = new JSONParser();
+        JSONObject jsonObjectResponce = (JSONObject) jsonParser.parse(responce);
+        assertThat(jsonObjectResponce.get("result").toString()).isEqualTo(credit.replaceAll("\\s+", ""));
     }
 
     @Test
@@ -222,8 +229,8 @@ public class ConveyorControllerTests {
         String jsonScoringDataString = jsonScoringData.toString();
         this.mockMvc.perform(post("/conveyor/calculation")
                         .contentType(MediaType.APPLICATION_JSON).content(jsonScoringDataString))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value("Error validate age"));
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.error").value("Error validate age"));
     }
 
     @Test
@@ -247,7 +254,7 @@ public class ConveyorControllerTests {
         String jsonScoringDataString = jsonScoringData.toString();
         this.mockMvc.perform(post("/conveyor/calculation")
                         .contentType(MediaType.APPLICATION_JSON).content(jsonScoringDataString))
-                .andExpect(status().is5xxServerError())
-                .andExpect(jsonPath("$.message").value("Error scoring"));
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.error").value("Error scoring"));
     }
 }

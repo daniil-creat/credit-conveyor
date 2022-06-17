@@ -50,7 +50,7 @@ class ScoringServiceImplTests {
     }
 
     @Test
-    void getCreditAgeExceptionTest() {
+    void getCreditAgeExceptionTest(){
         scoringData.setBirthdate(LocalDate.of(2010, 3, 8));
         AgeException exception = assertThrows(AgeException.class, () -> {
             scoringService.getCredit(scoringData);
@@ -58,7 +58,7 @@ class ScoringServiceImplTests {
     }
 
     @Test
-    void getCreditScorintDataNull() {
+    void getCreditScorintDataNull(){
         ScoringDataDTO scoringDataDTO = null;
         ScoringException exception = assertThrows(ScoringException.class, () -> {
             scoringService.getCredit(scoringDataDTO);
