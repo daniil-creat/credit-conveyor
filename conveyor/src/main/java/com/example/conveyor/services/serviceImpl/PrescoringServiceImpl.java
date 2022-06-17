@@ -32,9 +32,23 @@ public class PrescoringServiceImpl implements PrescoringService {
         try {
             List<LoanOfferDTO> listLoanOfferDto = new ArrayList<>();
             BigDecimal requestedAmount = loanApplicationRequest.getAmount();
+            BigDecimal requestedAmountWithInsurance = requestedAmount.add(BigDecimal.valueOf(1000));
             if (validationAge(loanApplicationRequest.getBirthday())) {
                 for (int i = 0; i < 4; i++) {
-                    listLoanOfferDto.add(calculationLoanOfferDto(i, requestedAmount, loanApplicationRequest));
+                    BigDecimal rate = calculatingRate(isInsuranceEnabled[i], isSalaryClient[i]);
+                    requestedAmount = isInsuranceEnabled[i] ? requestedAmountWithInsurance : requestedAmount;
+                    BigDecimal totalAmount = calculatingTotalAmount(rate, requestedAmount, loanApplicationRequest.getTerm());
+                    log.info("Get loan offers: total amount = {}, rate = {}", totalAmount, rate);
+                    BigDecimal monthlyPayment = calculatingMonthlyPayment(rate, requestedAmount, loanApplicationRequest.getTerm());
+                    listLoanOfferDto.add(LoanOfferDTO.builder().applicationId((long) i + 1)
+                            .rate(rate)
+                            .requestedAmount(loanApplicationRequest.getAmount())
+                            .totalAmount(totalAmount)
+                            .term(loanApplicationRequest.getTerm())
+                            .isInsuranceEnabled(isInsuranceEnabled[i])
+                            .isSalaryClient(isSalaryClient[i])
+                            .monthlyPayment(monthlyPayment)
+                            .build());
                 }
             }
             return listLoanOfferDto;
@@ -45,7 +59,8 @@ public class PrescoringServiceImpl implements PrescoringService {
         }
     }
 
-    private boolean validationAge(LocalDate birthday) throws AgeException {
+    @Override
+    public boolean validationAge(LocalDate birthday) throws AgeException {
         int years = Period.between(birthday, LocalDate.now()).getYears();
         if (years >= 18)
             return true;
@@ -53,49 +68,31 @@ public class PrescoringServiceImpl implements PrescoringService {
             throw new AgeException();
     }
 
-    private LoanOfferDTO calculationLoanOfferDto(int i, BigDecimal requestedAmount, LoanApplicationRequestDTO loanApplicationRequest) {
+    @Override
+    public BigDecimal calculatingTotalAmount(BigDecimal rate, BigDecimal requestedAmount, Integer term) {
+        return calculatingMonthlyPayment(rate, requestedAmount, term).multiply(BigDecimal.valueOf(term)).setScale(2, RoundingMode.CEILING);
+    }
+
+    @Override
+    public BigDecimal calculatingMonthlyPayment(BigDecimal rate, BigDecimal amount, Integer term) {
+        BigDecimal intermediateCoefficient = rate.divide(BigDecimal.valueOf(100), 4, RoundingMode.CEILING).divide(BigDecimal.valueOf(12), 4, RoundingMode.CEILING);
+        BigDecimal one = BigDecimal.valueOf(1);
+        return amount.multiply(intermediateCoefficient.add(intermediateCoefficient.divide(one.add(intermediateCoefficient).pow(term).subtract(one), 4, RoundingMode.CEILING)))
+                .setScale(2, RoundingMode.CEILING);
+    }
+
+    @Override
+    public BigDecimal calculatingRate(boolean isInsuranceEnabled, boolean isSalaryClient) {
         BigDecimal rate = baseRate;
-        BigDecimal totalAmount = BigDecimal.valueOf(0);
-        BigDecimal requestedAmountWithInsurance = requestedAmount.add(BigDecimal.valueOf(1000));
-        if (!isInsuranceEnabled[i] && !isSalaryClient[i]) {
-            totalAmount = calculatingTotalAmount(rate, requestedAmount, loanApplicationRequest.getTerm());
-
-        } else if (!isInsuranceEnabled[i] && isSalaryClient[i]) {
+        if (!isInsuranceEnabled && isSalaryClient) {
             rate = rate.subtract(BigDecimal.valueOf(1));
-            totalAmount = calculatingTotalAmount(rate, requestedAmount, loanApplicationRequest.getTerm());
 
-        } else if (isInsuranceEnabled[i] && !isSalaryClient[i]) {
+        } else if (isInsuranceEnabled && !isSalaryClient) {
             rate = rate.subtract(BigDecimal.valueOf(3));
 
-            totalAmount = calculatingTotalAmount(rate, requestedAmountWithInsurance, loanApplicationRequest.getTerm());
-
-        } else if (isInsuranceEnabled[i] && isSalaryClient[i]) {
+        } else if (isInsuranceEnabled && isSalaryClient) {
             rate = rate.subtract(BigDecimal.valueOf(4));
-            totalAmount = calculatingTotalAmount(rate, requestedAmountWithInsurance, loanApplicationRequest.getTerm());
         }
-        log.info("Get loan offers: total amount = {}, rate = {}", totalAmount, rate);
-        BigDecimal monthlyPayment = calculatingMonthlyPayment(rate, requestedAmount, loanApplicationRequest.getTerm());
-
-        return LoanOfferDTO.builder().applicationId((long) i + 1)
-                .rate(rate)
-                .requestedAmount(requestedAmount)
-                .totalAmount(totalAmount)
-                .term(loanApplicationRequest.getTerm())
-                .isInsuranceEnabled(isInsuranceEnabled[i])
-                .isSalaryClient(isSalaryClient[i])
-                .monthlyPayment(monthlyPayment)
-                .build();
-    }
-
-    private BigDecimal calculatingTotalAmount(BigDecimal rate, BigDecimal requestedAmount, Integer term) {
-        BigDecimal termBigDecimal = BigDecimal.valueOf(term);
-        return calculatingMonthlyPayment(rate, requestedAmount, term).multiply(termBigDecimal).setScale(2, RoundingMode.CEILING);
-    }
-
-    private BigDecimal calculatingMonthlyPayment(BigDecimal rate, BigDecimal amount, Integer term) {
-        BigDecimal varP = rate.divide(BigDecimal.valueOf(100), 4, RoundingMode.CEILING).divide(BigDecimal.valueOf(12), 4, RoundingMode.CEILING);
-        BigDecimal one = BigDecimal.valueOf(1);
-        return amount.multiply(varP.add(varP.divide(one.add(varP).pow(term).subtract(one), 4, RoundingMode.CEILING)))
-                .setScale(2, RoundingMode.CEILING);
+        return rate;
     }
 }
