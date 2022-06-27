@@ -23,33 +23,17 @@ public class PrescoringServiceImpl implements PrescoringService {
     @Value("${conveyor.base.rate}")
     private BigDecimal baseRate;
 
-    private final boolean[] isSalaryClient = {false, true, false, true};
-
-    private final boolean[] isInsuranceEnabled = {false, false, true, true};
-
     @Override
     public List<LoanOfferDTO> getLoanOffers(LoanApplicationRequestDTO loanApplicationRequest) {
         try {
             List<LoanOfferDTO> listLoanOfferDto = new ArrayList<>();
-            BigDecimal requestedAmount = loanApplicationRequest.getAmount();
-            BigDecimal requestedAmountWithInsurance = requestedAmount.add(BigDecimal.valueOf(1000));
+            boolean isSalaryClient = true;
+            boolean isInsuranceEnabled = true;
             if (validationAge(loanApplicationRequest.getBirthday())) {
-                for (int i = 0; i < 4; i++) {
-                    BigDecimal rate = calculatingRate(isInsuranceEnabled[i], isSalaryClient[i]);
-                    requestedAmount = isInsuranceEnabled[i] ? requestedAmountWithInsurance : requestedAmount;
-                    BigDecimal totalAmount = calculatingTotalAmount(rate, requestedAmount, loanApplicationRequest.getTerm());
-                    log.info("Get loan offers: total amount = {}, rate = {}", totalAmount, rate);
-                    BigDecimal monthlyPayment = calculatingMonthlyPayment(rate, requestedAmount, loanApplicationRequest.getTerm());
-                    listLoanOfferDto.add(LoanOfferDTO.builder().applicationId((long) i + 1)
-                            .rate(rate)
-                            .requestedAmount(loanApplicationRequest.getAmount())
-                            .totalAmount(totalAmount)
-                            .term(loanApplicationRequest.getTerm())
-                            .isInsuranceEnabled(isInsuranceEnabled[i])
-                            .isSalaryClient(isSalaryClient[i])
-                            .monthlyPayment(monthlyPayment)
-                            .build());
-                }
+                listLoanOfferDto.add(calculatingLoanOffer(!isInsuranceEnabled, !isSalaryClient, loanApplicationRequest, 1L));
+                listLoanOfferDto.add(calculatingLoanOffer(!isInsuranceEnabled, isSalaryClient, loanApplicationRequest, 2L));
+                listLoanOfferDto.add(calculatingLoanOffer(isInsuranceEnabled, !isSalaryClient, loanApplicationRequest, 3L));
+                listLoanOfferDto.add(calculatingLoanOffer(isInsuranceEnabled, isSalaryClient, loanApplicationRequest, 4L));
             }
             return listLoanOfferDto;
         } catch (AgeException ex) {
@@ -84,15 +68,31 @@ public class PrescoringServiceImpl implements PrescoringService {
     @Override
     public BigDecimal calculatingRate(boolean isInsuranceEnabled, boolean isSalaryClient) {
         BigDecimal rate = baseRate;
-        if (!isInsuranceEnabled && isSalaryClient) {
+        if (isSalaryClient) {
             rate = rate.subtract(BigDecimal.valueOf(1));
-
-        } else if (isInsuranceEnabled && !isSalaryClient) {
+        }
+        if (isInsuranceEnabled) {
             rate = rate.subtract(BigDecimal.valueOf(3));
-
-        } else if (isInsuranceEnabled && isSalaryClient) {
-            rate = rate.subtract(BigDecimal.valueOf(4));
         }
         return rate;
+    }
+
+    private LoanOfferDTO calculatingLoanOffer(boolean isInsuranceEnabled, boolean isSalaryClient, LoanApplicationRequestDTO loanApplicationRequest, Long id) {
+        BigDecimal rate = calculatingRate(isInsuranceEnabled, isSalaryClient);
+        BigDecimal requestedAmount = loanApplicationRequest.getAmount();
+        BigDecimal requestedAmountWithInsurance = requestedAmount.add(BigDecimal.valueOf(1000));
+        requestedAmount = isInsuranceEnabled ? requestedAmountWithInsurance : requestedAmount;
+        BigDecimal totalAmount = calculatingTotalAmount(rate, requestedAmount, loanApplicationRequest.getTerm());
+        log.info("Get loan offers: total amount = {}, rate = {}", totalAmount, rate);
+        BigDecimal monthlyPayment = calculatingMonthlyPayment(rate, requestedAmount, loanApplicationRequest.getTerm());
+        return LoanOfferDTO.builder().applicationId(id)
+                .rate(rate)
+                .requestedAmount(loanApplicationRequest.getAmount())
+                .totalAmount(totalAmount)
+                .term(loanApplicationRequest.getTerm())
+                .isInsuranceEnabled(isInsuranceEnabled)
+                .isSalaryClient(isSalaryClient)
+                .monthlyPayment(monthlyPayment)
+                .build();
     }
 }

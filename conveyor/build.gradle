@@ -27,6 +27,9 @@ dependencies {
     implementation 'io.springfox:springfox-swagger-ui:3.0.0'
     implementation 'org.springframework.boot:spring-boot-starter-validation:2.6.7'
     implementation 'org.springframework.boot:spring-boot-starter-parent:2.7.0'
+    implementation 'net.rakugakibox.spring.boot:logback-access-spring-boot-starter:2.7.1'
+    implementation 'ch.qos.logback:logback-access:1.2.3'
+    testImplementation 'ch.qos.logback:logback-classic:1.2.3'
 }
 
 tasks.named('test') {

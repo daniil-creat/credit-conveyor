@@ -27,8 +27,8 @@ public class ScoringServiceImpl implements ScoringServcie {
     @Override
     public CreditDTO getCredit(ScoringDataDTO scoringData) {
         try {
-            BigDecimal amount = scoringData.getIsInsuranceEnabled() ? scoringData.getAmount().add(BigDecimal.valueOf(1000))
-                    : scoringData.getAmount();
+            BigDecimal amountWithInsurance = scoringData.getAmount().add(BigDecimal.valueOf(1000));
+            BigDecimal amount = scoringData.getIsInsuranceEnabled() ? amountWithInsurance : scoringData.getAmount();
             CreditDTO creditDTO = null;
             if (prescoringService.validationAge(scoringData.getBirthdate())) {
                 BigDecimal rate = prescoringService.calculatingRate(scoringData.getIsInsuranceEnabled(), scoringData.getIsSalaryClient());

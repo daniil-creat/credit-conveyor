@@ -25,12 +25,12 @@ public class ConveyorController {
     private PrescoringService prescoringService;
 
     @PostMapping("/offers")
-    public List<LoanOfferDTO> differentOffersOfLoanConditions(@RequestBody @Valid LoanApplicationRequestDTO loanApplicationRequestDTO) throws Exception {
+    public List<LoanOfferDTO> differentOffersOfLoanConditions(@RequestBody @Valid LoanApplicationRequestDTO loanApplicationRequestDTO) {
         return prescoringService.getLoanOffers(loanApplicationRequestDTO);
     }
 
     @PostMapping("/calculation")
-    public CreditDTO calculationOfFullLoanParameters(@RequestBody @Valid ScoringDataDTO scoringDataDTO) throws Exception {
+    public CreditDTO calculationOfFullLoanParameters(@RequestBody @Valid ScoringDataDTO scoringDataDTO) {
         return scoringService.getCredit(scoringDataDTO);
     }
 }
