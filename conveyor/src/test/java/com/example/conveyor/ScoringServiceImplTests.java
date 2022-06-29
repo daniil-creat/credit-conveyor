@@ -1,8 +1,13 @@
 package com.example.conveyor;
 
 import com.example.conveyor.dto.CreditDTO;
+import com.example.conveyor.dto.EmploymentDTO;
 import com.example.conveyor.dto.PaymentScheduleElement;
 import com.example.conveyor.dto.ScoringDataDTO;
+import com.example.conveyor.enums.EmploymentStatus;
+import com.example.conveyor.enums.Gender;
+import com.example.conveyor.enums.MaritalStatus;
+import com.example.conveyor.enums.Position;
 import com.example.conveyor.exceptions.AgeException;
 import com.example.conveyor.exceptions.ScoringException;
 import com.example.conveyor.services.serviceImpl.ScoringServiceImpl;
@@ -28,11 +33,18 @@ class ScoringServiceImplTests {
 
     @BeforeEach
     public void setup() {
+        EmploymentDTO employmentDTO = new EmploymentDTO();
+        employmentDTO.setSalary(BigDecimal.valueOf(100000));
+        employmentDTO.setPosition(Position.WORKER);
+        employmentDTO.setEmploymentStatus(EmploymentStatus.WORKER);
         scoringData.setBirthdate(LocalDate.of(1996, 3, 8));
         scoringData.setAmount(BigDecimal.valueOf(200000));
         scoringData.setIsSalaryClient(false);
         scoringData.setIsInsuranceEnabled(false);
         scoringData.setTerm(6);
+        scoringData.setGender(Gender.MALE);
+        scoringData.setEmployment(employmentDTO);
+        scoringData.setMaritalStatus(MaritalStatus.SINGLE);
     }
 
     @Test
@@ -103,5 +115,23 @@ class ScoringServiceImplTests {
         assertEquals(true, creditDTO.getIsInsuranceEnabled());
         assertEquals(true, creditDTO.getIsSalaryClient());
         assertEquals(6, paymentScheduleElements.size());
+    }
+
+    @Test
+    void getEmptyCredit() throws ScoringException, AgeException {
+        scoringData.setIsSalaryClient(true);
+        scoringData.setIsInsuranceEnabled(true);
+        scoringData.setGender(Gender.FEMALE);
+        scoringData.setMaritalStatus(MaritalStatus.SINGLE);
+        CreditDTO creditDTO = scoringService.getCredit(scoringData);
+        List<PaymentScheduleElement> paymentScheduleElements = creditDTO.getPaymentSchedule();
+        assertEquals(0, creditDTO.getAmount().compareTo(BigDecimal.ZERO));
+        assertEquals(0, creditDTO.getTerm());
+        assertEquals(0, creditDTO.getMonthlyPayment().compareTo(BigDecimal.ZERO));
+        assertEquals(0, creditDTO.getRate().compareTo(BigDecimal.ZERO));
+        assertEquals(0, creditDTO.getPsk().compareTo(BigDecimal.ZERO));
+        assertEquals(true, creditDTO.getIsInsuranceEnabled());
+        assertEquals(true, creditDTO.getIsSalaryClient());
+        assertEquals(0, paymentScheduleElements.size());
     }
 }

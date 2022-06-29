@@ -35,6 +35,7 @@ public class ConveyorControllerTests {
     LocalDate date = LocalDate.now();
     String loanOffers = null;
     String credit = null;
+    String creditEmpty = null;
 
     @BeforeEach
     void setup() {
@@ -176,6 +177,17 @@ public class ConveyorControllerTests {
                 "  ]\n" +
                 "}";
 
+        creditEmpty = "{\n" +
+                "  \"amount\": 0,\n" +
+                "  \"term\": 0,\n" +
+                "  \"monthlyPayment\": 0,\n" +
+                "  \"rate\": 0,\n" +
+                "  \"psk\": 0,\n" +
+                "  \"isInsuranceEnabled\": false,\n" +
+                "  \"isSalaryClient\": false,\n" +
+                "  \"paymentSchedule\": []\n" +
+                "}";
+
     }
 
     @Test
@@ -249,5 +261,18 @@ public class ConveyorControllerTests {
                         .contentType(MediaType.APPLICATION_JSON).content(jsonScoringDataString))
                 .andExpect(status().is5xxServerError())
                 .andExpect(jsonPath("$.message").value("Error scoring"));
+    }
+
+    @Test
+    public void getCreditEmptyTest() throws Exception {
+        jsonScoringData.put("gender", "FEMALE");
+        String jsonScoringDataString = jsonScoringData.toString();
+        MvcResult mvcResult = this.mockMvc.perform(post("/conveyor/calculation")
+                        .contentType(MediaType.APPLICATION_JSON).content(jsonScoringDataString))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        String responce = mvcResult.getResponse().getContentAsString();
+        assertThat(responce).isEqualTo(creditEmpty.replaceAll("\\s+", ""));
     }
 }
