@@ -9,8 +9,9 @@ import com.example.conveyor.enums.Gender;
 import com.example.conveyor.enums.MaritalStatus;
 import com.example.conveyor.enums.Position;
 import com.example.conveyor.exceptions.AgeException;
+import com.example.conveyor.exceptions.CreditException;
 import com.example.conveyor.exceptions.ScoringException;
-import com.example.conveyor.services.serviceImpl.ScoringServiceImpl;
+import com.example.conveyor.service.impl.CreditServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,10 +25,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
-class ScoringServiceImplTests {
+class CreditServiceTests {
 
     @Autowired
-    private ScoringServiceImpl scoringService;
+    private CreditServiceImpl creditService;
 
     ScoringDataDTO scoringData = new ScoringDataDTO();
 
@@ -49,7 +50,7 @@ class ScoringServiceImplTests {
 
     @Test
     void getCreditTest() throws ScoringException, AgeException {
-        CreditDTO creditDTO = scoringService.getCredit(scoringData);
+        CreditDTO creditDTO = creditService.getCredit(scoringData);
         List<PaymentScheduleElement> paymentScheduleElements = creditDTO.getPaymentSchedule();
         assertEquals(0, creditDTO.getAmount().compareTo(BigDecimal.valueOf(207120.00)));
         assertEquals(6, creditDTO.getTerm());
@@ -65,15 +66,15 @@ class ScoringServiceImplTests {
     void getCreditAgeExceptionTest() {
         scoringData.setBirthdate(LocalDate.of(2010, 3, 8));
         AgeException exception = assertThrows(AgeException.class, () -> {
-            scoringService.getCredit(scoringData);
+            creditService.getCredit(scoringData);
         });
     }
 
     @Test
     void getCreditScorintDataNull() {
         ScoringDataDTO scoringDataDTO = null;
-        ScoringException exception = assertThrows(ScoringException.class, () -> {
-            scoringService.getCredit(scoringDataDTO);
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+            creditService.getCredit(scoringDataDTO);
         });
     }
 
@@ -81,15 +82,15 @@ class ScoringServiceImplTests {
     void getCreditExceptionTest() {
         scoringData.setTerm(1000000000);
         scoringData.setAmount(BigDecimal.valueOf(1000000000));
-        ScoringException exception = assertThrows(ScoringException.class, () -> {
-            scoringService.getCredit(scoringData);
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+            creditService.getCredit(scoringData);
         });
     }
 
     @Test
     void getCreditIfSalaryClientTrue() throws ScoringException, AgeException {
         scoringData.setIsSalaryClient(true);
-        CreditDTO creditDTO = scoringService.getCredit(scoringData);
+        CreditDTO creditDTO = creditService.getCredit(scoringData);
         List<PaymentScheduleElement> paymentScheduleElements = creditDTO.getPaymentSchedule();
         assertEquals(0, creditDTO.getAmount().compareTo(BigDecimal.valueOf(206520.00)));
         assertEquals(6, creditDTO.getTerm());
@@ -105,7 +106,7 @@ class ScoringServiceImplTests {
     void getCreditIfSalaryClientTrueAndIsInsuranceEnabledTrue() throws ScoringException, AgeException {
         scoringData.setIsSalaryClient(true);
         scoringData.setIsInsuranceEnabled(true);
-        CreditDTO creditDTO = scoringService.getCredit(scoringData);
+        CreditDTO creditDTO = creditService.getCredit(scoringData);
         List<PaymentScheduleElement> paymentScheduleElements = creditDTO.getPaymentSchedule();
         assertEquals(0, creditDTO.getAmount().compareTo(BigDecimal.valueOf(205743.60)));
         assertEquals(6, creditDTO.getTerm());
@@ -123,15 +124,8 @@ class ScoringServiceImplTests {
         scoringData.setIsInsuranceEnabled(true);
         scoringData.setGender(Gender.FEMALE);
         scoringData.setMaritalStatus(MaritalStatus.SINGLE);
-        CreditDTO creditDTO = scoringService.getCredit(scoringData);
-        List<PaymentScheduleElement> paymentScheduleElements = creditDTO.getPaymentSchedule();
-        assertEquals(0, creditDTO.getAmount().compareTo(BigDecimal.ZERO));
-        assertEquals(0, creditDTO.getTerm());
-        assertEquals(0, creditDTO.getMonthlyPayment().compareTo(BigDecimal.ZERO));
-        assertEquals(0, creditDTO.getRate().compareTo(BigDecimal.ZERO));
-        assertEquals(0, creditDTO.getPsk().compareTo(BigDecimal.ZERO));
-        assertEquals(true, creditDTO.getIsInsuranceEnabled());
-        assertEquals(true, creditDTO.getIsSalaryClient());
-        assertEquals(0, paymentScheduleElements.size());
+        CreditException exception = assertThrows(CreditException.class, () -> {
+            creditService.getCredit(scoringData);
+        });
     }
 }

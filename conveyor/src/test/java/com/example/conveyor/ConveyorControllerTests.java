@@ -1,6 +1,6 @@
 package com.example.conveyor;
 
-import com.example.conveyor.services.serviceImpl.ScoringServiceImpl;
+import com.example.conveyor.service.impl.CreditServiceImpl;
 import net.minidev.json.JSONObject;
 import net.minidev.json.parser.JSONParser;
 import org.junit.jupiter.api.BeforeEach;
@@ -27,7 +27,7 @@ public class ConveyorControllerTests {
     @Autowired
     private MockMvc mockMvc;
     @Mock
-    private ScoringServiceImpl scoringService;
+    private CreditServiceImpl scoringService;
 
     JSONObject jsonLoanApplication = new JSONObject();
     JSONObject jsonScoringData = new JSONObject();
@@ -234,8 +234,7 @@ public class ConveyorControllerTests {
         String jsonScoringDataString = jsonScoringData.toString();
         this.mockMvc.perform(post("/conveyor/calculation")
                         .contentType(MediaType.APPLICATION_JSON).content(jsonScoringDataString))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value("Error validate age"));
+                .andExpect(status().is4xxClientError());
     }
 
     @Test
@@ -244,7 +243,7 @@ public class ConveyorControllerTests {
         String jsonScoringDataString = jsonScoringData.toString();
         MvcResult mvcResult = this.mockMvc.perform(post("/conveyor/calculation")
                         .contentType(MediaType.APPLICATION_JSON).content(jsonScoringDataString))
-                .andExpect(status().isBadRequest())
+                .andExpect(status().is4xxClientError())
                 .andReturn();
 
         String responce = mvcResult.getResponse().getContentAsString();
@@ -259,20 +258,16 @@ public class ConveyorControllerTests {
         String jsonScoringDataString = jsonScoringData.toString();
         this.mockMvc.perform(post("/conveyor/calculation")
                         .contentType(MediaType.APPLICATION_JSON).content(jsonScoringDataString))
-                .andExpect(status().is5xxServerError())
-                .andExpect(jsonPath("$.message").value("Error scoring"));
+                .andExpect(status().is5xxServerError());
     }
 
     @Test
     public void getCreditEmptyTest() throws Exception {
         jsonScoringData.put("gender", "FEMALE");
         String jsonScoringDataString = jsonScoringData.toString();
-        MvcResult mvcResult = this.mockMvc.perform(post("/conveyor/calculation")
+        this.mockMvc.perform(post("/conveyor/calculation")
                         .contentType(MediaType.APPLICATION_JSON).content(jsonScoringDataString))
-                .andExpect(status().isOk())
-                .andReturn();
-
-        String responce = mvcResult.getResponse().getContentAsString();
-        assertThat(responce).isEqualTo(creditEmpty.replaceAll("\\s+", ""));
+                .andExpect(status().is4xxClientError())
+                .andExpect(jsonPath("$.message").value("credit denied"));
     }
 }

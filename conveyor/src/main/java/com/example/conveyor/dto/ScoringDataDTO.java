@@ -4,6 +4,7 @@ import com.example.conveyor.enums.Gender;
 import com.example.conveyor.enums.MaritalStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
+import lombok.NonNull;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.Min;
@@ -13,6 +14,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Data
+@NonNull
 public class ScoringDataDTO {
 
     @Min(value = 100000, message = "amount must be 100000 and more")

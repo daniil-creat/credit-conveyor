@@ -4,7 +4,7 @@ import com.example.conveyor.dto.LoanApplicationRequestDTO;
 import com.example.conveyor.dto.LoanOfferDTO;
 import com.example.conveyor.exceptions.AgeException;
 import com.example.conveyor.exceptions.ScoringException;
-import com.example.conveyor.services.serviceImpl.PrescoringServiceImpl;
+import com.example.conveyor.service.impl.OfferServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,10 +19,10 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.springframework.util.Assert.isTrue;
 
 @SpringBootTest
-public class PrescoringServiceImplTests {
+public class OfferServiceTests {
 
     @Autowired
-    private PrescoringServiceImpl prescoringService;
+    private OfferServiceImpl offerService;
 
     LoanApplicationRequestDTO loanApplicationRequest = new LoanApplicationRequestDTO();
 
@@ -40,7 +40,7 @@ public class PrescoringServiceImplTests {
 
     @Test()
     public void getLoanOffersTest() throws ScoringException, AgeException {
-        List<LoanOfferDTO> loanOfferDTOs = prescoringService.getLoanOffers(loanApplicationRequest);
+        List<LoanOfferDTO> loanOfferDTOs = offerService.getLoanOffers(loanApplicationRequest);
         LoanOfferDTO loanOfferDTO1 = loanOfferDTOs.get(0);
         LoanOfferDTO loanOfferDTO2 = loanOfferDTOs.get(1);
         LoanOfferDTO loanOfferDTO3 = loanOfferDTOs.get(2);
@@ -81,15 +81,15 @@ public class PrescoringServiceImplTests {
     void getLoanOffersErrorAgeTest() {
         loanApplicationRequest.setBirthday(LocalDate.of(2010, 3, 8));
         AgeException exception = assertThrows(AgeException.class, () -> {
-            prescoringService.getLoanOffers(loanApplicationRequest);
+           offerService.getLoanOffers(loanApplicationRequest);
         });
     }
 
     @Test
     void getLoanOffersLowByLoanApplicationRequestNullTest() {
         LoanApplicationRequestDTO loanApplicationRequestDTO = null;
-        ScoringException exception = assertThrows(ScoringException.class, () -> {
-            prescoringService.getLoanOffers(loanApplicationRequestDTO);
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+            offerService.getLoanOffers(loanApplicationRequestDTO);
         });
     }
 }
