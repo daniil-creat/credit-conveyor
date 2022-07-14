@@ -2,7 +2,6 @@ package com.example.conveyor.service.impl;
 
 import com.example.conveyor.dto.LoanApplicationRequestDTO;
 import com.example.conveyor.dto.LoanOfferDTO;
-import com.example.conveyor.exceptions.AgeException;
 import com.example.conveyor.service.OfferService;
 import com.example.conveyor.service.ScoringService;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +21,6 @@ public class OfferServiceImpl implements OfferService {
 
     @Override
     public List<LoanOfferDTO> getLoanOffers(LoanApplicationRequestDTO loanApplicationRequest) {
-        try {
             List<LoanOfferDTO> listLoanOfferDto = new ArrayList<>();
             if (scoringService.validationAge(loanApplicationRequest.getBirthday())) {
                 listLoanOfferDto.add(calculatingLoanOffer(false, false, loanApplicationRequest, 1L));
@@ -31,9 +29,6 @@ public class OfferServiceImpl implements OfferService {
                 listLoanOfferDto.add(calculatingLoanOffer(true, true, loanApplicationRequest, 4L));
             }
             return listLoanOfferDto;
-        } catch (AgeException ex) {
-            throw new AgeException("Error validation age");
-        }
     }
 
     private LoanOfferDTO calculatingLoanOffer(boolean isInsuranceEnabled, boolean isSalaryClient, LoanApplicationRequestDTO loanApplicationRequest, Long id) {

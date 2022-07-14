@@ -52,7 +52,7 @@ public class RestErrorHandler extends ResponseEntityExceptionHandler {
 
         FieldError fieldError = exception.getBindingResult().getFieldError();
         log.error("Error validation, field:{}, {}", fieldError.getField(), fieldError.getDefaultMessage());
-        String bodyOfResponse = "Error validation, field " + fieldError.getField() + ", " + fieldError.getDefaultMessage();
-        return new ResponseEntity<>(bodyOfResponse, status);
+        String message = "Error validation, field " + fieldError.getField() + ", " + fieldError.getDefaultMessage();
+        return new ResponseEntity<>(new ErrorDTO(message), status);
     }
 }

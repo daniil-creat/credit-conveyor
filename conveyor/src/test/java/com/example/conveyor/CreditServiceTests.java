@@ -65,7 +65,7 @@ class CreditServiceTests {
     @Test
     void getCreditAgeExceptionTest() {
         scoringData.setBirthdate(LocalDate.of(2010, 3, 8));
-        AgeException exception = assertThrows(AgeException.class, () -> {
+        assertThrows(AgeException.class, () -> {
             creditService.getCredit(scoringData);
         });
     }
@@ -73,7 +73,7 @@ class CreditServiceTests {
     @Test
     void getCreditScorintDataNull() {
         ScoringDataDTO scoringDataDTO = null;
-        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+         assertThrows(RuntimeException.class, () -> {
             creditService.getCredit(scoringDataDTO);
         });
     }
@@ -82,7 +82,7 @@ class CreditServiceTests {
     void getCreditExceptionTest() {
         scoringData.setTerm(1000000000);
         scoringData.setAmount(BigDecimal.valueOf(1000000000));
-        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+         assertThrows(RuntimeException.class, () -> {
             creditService.getCredit(scoringData);
         });
     }
@@ -124,7 +124,7 @@ class CreditServiceTests {
         scoringData.setIsInsuranceEnabled(true);
         scoringData.setGender(Gender.FEMALE);
         scoringData.setMaritalStatus(MaritalStatus.SINGLE);
-        CreditException exception = assertThrows(CreditException.class, () -> {
+        assertThrows(CreditException.class, () -> {
             creditService.getCredit(scoringData);
         });
     }

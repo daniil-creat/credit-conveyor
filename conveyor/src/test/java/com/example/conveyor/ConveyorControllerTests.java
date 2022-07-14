@@ -1,11 +1,8 @@
 package com.example.conveyor;
 
-import com.example.conveyor.service.impl.CreditServiceImpl;
 import net.minidev.json.JSONObject;
-import net.minidev.json.parser.JSONParser;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -22,20 +19,17 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class ConveyorControllerTests {
+class ConveyorControllerTests {
 
     @Autowired
     private MockMvc mockMvc;
-    @Mock
-    private CreditServiceImpl scoringService;
 
     JSONObject jsonLoanApplication = new JSONObject();
     JSONObject jsonScoringData = new JSONObject();
     JSONObject employment = new JSONObject();
     LocalDate date = LocalDate.now();
-    String loanOffers = null;
-    String credit = null;
-    String creditEmpty = null;
+    String loanOffersExpected = null;
+    String creditExpected = null;
 
     @BeforeEach
     void setup() {
@@ -74,7 +68,7 @@ public class ConveyorControllerTests {
         jsonScoringData.put("isInsuranceEnabled", false);
         jsonScoringData.put("isSalaryClient", false);
 
-        loanOffers = "[\n" +
+        loanOffersExpected = "[\n" +
                 "  {\n" +
                 "    \"applicationId\": 1,\n" +
                 "    \"requestedAmount\": 200000,\n" +
@@ -117,7 +111,7 @@ public class ConveyorControllerTests {
                 "  }\n" +
                 "]";
 
-        credit = "{\n" +
+        creditExpected = "{\n" +
                 "  \"amount\": 207120.00,\n" +
                 "  \"term\": 6,\n" +
                 "  \"monthlyPayment\": 34520.00,\n" +
@@ -176,98 +170,86 @@ public class ConveyorControllerTests {
                 "    }\n" +
                 "  ]\n" +
                 "}";
-
-        creditEmpty = "{\n" +
-                "  \"amount\": 0,\n" +
-                "  \"term\": 0,\n" +
-                "  \"monthlyPayment\": 0,\n" +
-                "  \"rate\": 0,\n" +
-                "  \"psk\": 0,\n" +
-                "  \"isInsuranceEnabled\": false,\n" +
-                "  \"isSalaryClient\": false,\n" +
-                "  \"paymentSchedule\": []\n" +
-                "}";
-
     }
 
     @Test
-    public void getDifferentOffersOfLoanConditions() throws Exception {
+    void getDifferentOffersOfLoanConditions() throws Exception {
         String jsonLoanApplicationString = jsonLoanApplication.toString();
+
         MvcResult mvcResult = this.mockMvc.perform(post("/conveyor/offers")
                         .contentType(MediaType.APPLICATION_JSON).content(jsonLoanApplicationString))
                 .andExpect(status().isOk())
                 .andReturn();
 
         String responce = mvcResult.getResponse().getContentAsString();
-        JSONParser jsonParser = new JSONParser();
-        assertThat(responce).isEqualTo(loanOffers.replaceAll("\\s+", ""));
+        assertThat(responce).isEqualTo(loanOffersExpected.replaceAll("\\s+", ""));
     }
 
     @Test
-    public void getDifferentOffersOfLoanConditionsWithExceptionValidate() throws Exception {
+    void getDifferentOffersOfLoanConditionsWithExceptionValidate() throws Exception {
         jsonLoanApplication.put("amount", 90000);
         String jsonLoanApplicationString = jsonLoanApplication.toString();
-        MvcResult mvcResult = this.mockMvc.perform(post("/conveyor/offers")
+
+        this.mockMvc.perform(post("/conveyor/offers")
                         .contentType(MediaType.APPLICATION_JSON).content(jsonLoanApplicationString))
                 .andExpect(status().isBadRequest())
-                .andReturn();
-
-        String responce = mvcResult.getResponse().getContentAsString();
-        assertThat(responce).isEqualTo("Error validation, field amount, amount must be 100000 and more");
+                .andExpect(jsonPath("$.message").value("Error validation, field amount, amount must be 100000 and more"));
     }
 
     @Test
-    public void getCreditTest() throws Exception {
+    void getCreditTest() throws Exception {
         String jsonScoringDataString = jsonScoringData.toString();
+
         MvcResult mvcResult = this.mockMvc.perform(post("/conveyor/calculation")
                         .contentType(MediaType.APPLICATION_JSON).content(jsonScoringDataString))
                 .andExpect(status().isOk())
                 .andReturn();
 
         String responce = mvcResult.getResponse().getContentAsString();
-        assertThat(responce).isEqualTo(credit.replaceAll("\\s+", ""));
+        assertThat(responce).isEqualTo(creditExpected.replaceAll("\\s+", ""));
     }
 
     @Test
-    public void getCreditExceptionTest() throws Exception {
-        jsonScoringData.put("birthdate", "2010-03-08");
+    void getCreditExceptionTest() throws Exception {
+        String date = LocalDate.now().minusDays(2).toString();
+        jsonScoringData.put("birthdate", date);
         String jsonScoringDataString = jsonScoringData.toString();
+
         this.mockMvc.perform(post("/conveyor/calculation")
                         .contentType(MediaType.APPLICATION_JSON).content(jsonScoringDataString))
-                .andExpect(status().is4xxClientError());
+                .andExpect(status().is(406));
     }
 
     @Test
-    public void getCreditExceptionValidationNameTest() throws Exception {
+    void getCreditExceptionValidationNameTest() throws Exception {
         jsonScoringData.put("firstName", "D");
         String jsonScoringDataString = jsonScoringData.toString();
-        MvcResult mvcResult = this.mockMvc.perform(post("/conveyor/calculation")
+
+        this.mockMvc.perform(post("/conveyor/calculation")
                         .contentType(MediaType.APPLICATION_JSON).content(jsonScoringDataString))
-                .andExpect(status().is4xxClientError())
-                .andReturn();
-
-        String responce = mvcResult.getResponse().getContentAsString();
-        assertThat(responce).isEqualTo("Error validation, field firstName, must be from 2 to 30 characters");
-
+                .andExpect(status().is(400))
+                .andExpect(jsonPath("$.message").value("Error validation, field firstName, must be from 2 to 30 characters"));
     }
 
     @Test
-    public void getCreditExceptionScoringTest() throws Exception {
+    void getCreditExceptionScoringTest() throws Exception {
         jsonScoringData.put("term", 1000000000);
         jsonScoringData.put("amount", 1000000000);
         String jsonScoringDataString = jsonScoringData.toString();
+
         this.mockMvc.perform(post("/conveyor/calculation")
                         .contentType(MediaType.APPLICATION_JSON).content(jsonScoringDataString))
-                .andExpect(status().is5xxServerError());
+                .andExpect(status().is(500));
     }
 
     @Test
-    public void getCreditEmptyTest() throws Exception {
+    void getCreditEmptyTest() throws Exception {
         jsonScoringData.put("gender", "FEMALE");
         String jsonScoringDataString = jsonScoringData.toString();
+
         this.mockMvc.perform(post("/conveyor/calculation")
                         .contentType(MediaType.APPLICATION_JSON).content(jsonScoringDataString))
-                .andExpect(status().is4xxClientError())
+                .andExpect(status().is(406))
                 .andExpect(jsonPath("$.message").value("credit denied"));
     }
 }

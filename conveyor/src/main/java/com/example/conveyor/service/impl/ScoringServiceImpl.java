@@ -60,7 +60,7 @@ public class ScoringServiceImpl  implements ScoringService {
         if (years >= 18)
             return true;
         else
-            throw new AgeException();
+            throw new AgeException("Age less than eighteen");
     }
 
     @Override

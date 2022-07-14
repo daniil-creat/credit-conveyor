@@ -12,14 +12,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.springframework.util.Assert.isTrue;
 
 @SpringBootTest
-public class OfferServiceTests {
+ class OfferServiceTests {
 
     @Autowired
     private OfferServiceImpl offerService;
@@ -27,19 +26,14 @@ public class OfferServiceTests {
     LoanApplicationRequestDTO loanApplicationRequest = new LoanApplicationRequestDTO();
 
     @BeforeEach
-    public void setup() {
-        List<LoanOfferDTO> loanOfferDTOS = new ArrayList<>();
-        LoanOfferDTO loanOfferDto1;
-        LoanOfferDTO loanOfferDto2;
-        LoanOfferDTO loanOfferDto3;
-        LoanOfferDTO loanOfferDto4;
+     void setup() {
         loanApplicationRequest.setAmount(BigDecimal.valueOf(200000));
         loanApplicationRequest.setTerm(6);
         loanApplicationRequest.setBirthday(LocalDate.of(1996, 3, 8));
     }
 
     @Test()
-    public void getLoanOffersTest() throws ScoringException, AgeException {
+     void getLoanOffersTest() throws ScoringException, AgeException {
         List<LoanOfferDTO> loanOfferDTOs = offerService.getLoanOffers(loanApplicationRequest);
         LoanOfferDTO loanOfferDTO1 = loanOfferDTOs.get(0);
         LoanOfferDTO loanOfferDTO2 = loanOfferDTOs.get(1);
@@ -80,7 +74,7 @@ public class OfferServiceTests {
     @Test
     void getLoanOffersErrorAgeTest() {
         loanApplicationRequest.setBirthday(LocalDate.of(2010, 3, 8));
-        AgeException exception = assertThrows(AgeException.class, () -> {
+       assertThrows(AgeException.class, () -> {
            offerService.getLoanOffers(loanApplicationRequest);
         });
     }
@@ -88,7 +82,7 @@ public class OfferServiceTests {
     @Test
     void getLoanOffersLowByLoanApplicationRequestNullTest() {
         LoanApplicationRequestDTO loanApplicationRequestDTO = null;
-        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+        assertThrows(RuntimeException.class, () -> {
             offerService.getLoanOffers(loanApplicationRequestDTO);
         });
     }
