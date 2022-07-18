@@ -1,0 +1,16 @@
+{
+  "gender": "MALE",
+  "maritalStatus": "MARRIED",
+  "dependentAmount": "0",
+  "passportIssueDate": "1996-09-03",
+  "passportIssueBranch": "124124",
+  "employment": {
+    "employmentStatus": "EMPLOYED",
+    "employerINN" : "312434134",
+    "position": "WORKER",
+    "workExperienceTotal": "2",
+    "workExperienceCurrent": "6",
+    "salary": "100000"
+  },
+  "account": "123224214"
+}
