@@ -6,9 +6,11 @@ import com.example.deal.entity.Client;
 import com.example.deal.repository.ClientRepository;
 import com.example.deal.services.ClientService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
+@Log4j2
 @Service
 public class ClientServiceImpl implements ClientService {
 
@@ -16,6 +18,7 @@ public class ClientServiceImpl implements ClientService {
 
     @Override
     public Client creatClient(LoanApplicationRequestDTO loanApplicationRequest) {
+        log.info("Service: Client, creatClient method, parameters:{}", loanApplicationRequest);
         Passport passport = Passport.builder()
                 .series(loanApplicationRequest.getPassportSeries())
                 .number(loanApplicationRequest.getPassportNumber())
@@ -29,11 +32,14 @@ public class ClientServiceImpl implements ClientService {
                 .passport(passport)
                 .build();
 
-       return clientRepository.save(client);
+        Client savedClient = clientRepository.save(client);
+        log.info("Service: Client, creatClient method, return:{}", savedClient);
+       return savedClient;
     }
 
     @Override
     public void deleteAll() {
+        log.info("Service: Client, deleteAll method");
         clientRepository.deleteAll();
     }
 }

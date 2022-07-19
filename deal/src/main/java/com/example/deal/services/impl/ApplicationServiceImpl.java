@@ -8,6 +8,7 @@ import com.example.deal.enums.Status;
 import com.example.deal.repository.ApplicationRepository;
 import com.example.deal.services.ApplicationService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -15,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@Log4j2
 @RequiredArgsConstructor
 public class ApplicationServiceImpl implements ApplicationService {
 
@@ -22,20 +24,27 @@ public class ApplicationServiceImpl implements ApplicationService {
 
     @Override
     public Application creatApplication(Client client) {
+        log.info("Service: Application, creatApplication method, parameters:{}", client);
         Application application = Application.builder()
                 .client(client)
                 .creationDate(LocalDate.now())
                 .build();
-        return applicationRepository.save(application);
+        Application savedApplication = applicationRepository.save(application);
+        log.info("Service: Application, creatApplication method, return:{}", savedApplication);
+        return savedApplication;
     }
 
     @Override
     public Application findById(Long id) {
-        return applicationRepository.findById(id).orElse(null);
+        log.info("Service: Application, findById method, parameters:{}", id);
+        Application application = applicationRepository.findById(id).orElse(null);
+        log.info("Service: Application, findById method, return:{}", application);
+        return application;
     }
 
     @Override
     public Application updateApplicationByLoanOffer(Application application, LoanOfferDTO loanOffer) {
+        log.info("Service: Application, updateApplicationByLoanOffer method, parameters:{}, {}", application, loanOffer);
         List<ApplicationStatusHistoryDTO> listStatus = new ArrayList<>();
         application.setAppliedOffer(LoanOfferDTO.builder()
                 .applicationId(loanOffer.getApplicationId())
@@ -54,11 +63,15 @@ public class ApplicationServiceImpl implements ApplicationService {
         listStatus.add(statusHistory);
         application.setStatusHistory(listStatus);
         application.setStatus(Status.PREAPPROVAL);
-        return applicationRepository.save(application);
+
+        Application savedApplication = applicationRepository.save(application);
+        log.info("Service: Application, updateApplicationByLoanOffer method, return:{}", savedApplication);
+        return savedApplication;
     }
 
     @Override
     public void deletAll() {
+        log.info("Service: Application, deleteAll method");
         applicationRepository.deleteAll();
     }
 }
