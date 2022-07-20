@@ -1,18 +1,16 @@
-package com.example.deal.dto;
+package com.example.application.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Embeddable;
 import java.math.BigDecimal;
 
 @Data
 @Builder
-@Embeddable
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 public class LoanOfferDTO {
     private Long applicationId;
     private BigDecimal requestedAmount;

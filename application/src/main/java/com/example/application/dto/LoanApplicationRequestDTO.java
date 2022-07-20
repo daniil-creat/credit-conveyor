@@ -1,6 +1,7 @@
-package com.example.conveyor.dto;
+package com.example.application.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.Builder;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -12,6 +13,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Data
+@Builder
 public class LoanApplicationRequestDTO {
     @Min(value = 100000, message = "amount must be 100000 and more")
     private BigDecimal amount;

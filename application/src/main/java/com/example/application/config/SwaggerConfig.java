@@ -1,4 +1,4 @@
-package com.example.deal.config;
+package com.example.application.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,7 +15,7 @@ public class SwaggerConfig {
     public Docket api(){
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.example.deal"))
+                .apis(RequestHandlerSelectors.basePackage("com.example.application"))
                 .paths(PathSelectors.any())
                 .build();
     }

@@ -1,4 +1,4 @@
-package com.example.conveyor.filter;
+package com.example.application.filter;
 
 import ch.qos.logback.access.servlet.TeeFilter;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;

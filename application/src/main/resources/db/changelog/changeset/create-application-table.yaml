@@ -1,0 +1,60 @@
+databaseChangeLog:
+  - changeSet:
+      id: create_application
+      author: Kalimov Daniil
+      changes:
+        - createTable:
+            tableName: application
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: client_id
+                  type: bigint
+                  constraints:
+                    foreignKeyName: fk_client_id
+                    referencedTableName: client
+                    referencedColumnNames: id
+              - column:
+                  name: is_insurance_enabled
+                  type: boolean
+              - column:
+                  name: is_salary_client
+                  type: boolean
+              - column:
+                  name: monthly_payment
+                  type: numeric(19,2)
+              - column:
+                  name: rate
+                  type: numeric(19,2)
+              - column:
+                  name: requested_amount
+                  type: numeric(19,2)
+              - column:
+                  name: term
+                  type: integer
+              - column:
+                  name: total_amount
+                  type: numeric(19,2)
+              - column:
+                  name: creation_date
+                  type: date
+              - column:
+                  name: ses_code
+                  type: varchar(255)
+              - column:
+                  name: sign_date
+                  type: date
+              - column:
+                  name: status
+                  type: integer
+              - column:
+                  name: application_id
+                  type: bigint
+
+

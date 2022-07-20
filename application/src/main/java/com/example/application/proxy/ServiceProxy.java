@@ -1,19 +1,18 @@
-package com.example.deal.proxy;
+package com.example.application.proxy;
 
-import com.example.deal.dto.CreditDTO;
-import com.example.deal.dto.LoanApplicationRequestDTO;
-import com.example.deal.dto.LoanOfferDTO;
-import com.example.deal.dto.ScoringDataDTO;
+import com.example.application.dto.LoanApplicationRequestDTO;
+import com.example.application.dto.LoanOfferDTO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 
 import java.util.List;
 
-@FeignClient(name = "conveyor", url = "localhost:8081")
+@FeignClient(name = "conveyor", url = "localhost:8082")
 public interface ServiceProxy {
-    @PostMapping("/conveyor/offers")
-    List<LoanOfferDTO> getLoanOffersOfConveyor(LoanApplicationRequestDTO loanApplicationRequestDTO);
+    @PostMapping("/deal/application")
+    List<LoanOfferDTO> createApplicationAndGetLoanOffers(LoanApplicationRequestDTO loanApplicationRequestDTO);
 
-    @PostMapping("/conveyor/calculation")
-    CreditDTO getCredit(ScoringDataDTO scoringDataDTO);
+    @PutMapping("/deal/offer")
+    void sendLoanOfferForCalculate(LoanOfferDTO loanOfferDTO);
 }

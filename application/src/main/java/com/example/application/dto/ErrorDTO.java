@@ -1,4 +1,4 @@
-package com.example.conveyor.dto;
+package com.example.application.dto;
 
 import lombok.Getter;
 
