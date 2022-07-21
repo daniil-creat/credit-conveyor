@@ -1,0 +1,11 @@
+{
+  "amount": "200000",
+  "term": "6",
+  "firstName": "Daniil",
+  "lastName": "Kalimov",
+  "middleName": "Valeryevich",
+  "email": "dkal@mail.com",
+  "birthday": "1996-08-03",
+  "passportSeries":"401",
+  "passportNumber":"524201"
+}

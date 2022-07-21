@@ -1,0 +1,39 @@
+databaseChangeLog:
+  - changeSet:
+      id: create_credit
+      author: Kalimov Daniil
+      changes:
+        - createTable:
+            tableName: credit
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: amount
+                  type: numeric(19,2)
+              - column:
+                  name: credit_status
+                  type: integer
+              - column:
+                  name: is_insurance_enabled
+                  type: boolean
+              - column:
+                  name: is_salary_client
+                  type: boolean
+              - column:
+                  name: monthly_payment
+                  type: numeric(19,2)
+              - column:
+                  name: psk
+                  type: numeric(19,2)
+              - column:
+                  name: rate
+                  type: numeric(19,2)
+              - column:
+                  name: term
+                  type: integer

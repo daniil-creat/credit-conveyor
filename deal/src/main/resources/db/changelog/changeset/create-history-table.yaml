@@ -1,0 +1,20 @@
+databaseChangeLog:
+  - changeSet:
+      id: create_history
+      author: Kalimov Daniil
+      changes:
+        - createTable:
+            tableName: status_history
+            columns:
+              - column:
+                  name: application_id
+                  type: bigint
+              - column:
+                  name: change_type
+                  type: integer
+              - column:
+                  name: local_date_time
+                  type: date
+              - column:
+                  name: status
+                  type: integer

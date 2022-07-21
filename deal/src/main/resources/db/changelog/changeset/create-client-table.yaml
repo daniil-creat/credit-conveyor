@@ -1,0 +1,67 @@
+databaseChangeLog:
+  - changeSet:
+      id: create_client
+      author: Kalimov Daniil
+      changes:
+        - createTable:
+            tableName: client
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: account
+                  type: varchar(255)
+              - column:
+                  name: birth_date
+                  type: date
+              - column:
+                  name: dependent_amount
+                  type: integer
+              - column:
+                  name: email
+                  type: varchar(255)
+              - column:
+                  name: first_name
+                  type: varchar(255)
+              - column:
+                  name: last_name
+                  type: varchar(255)
+              - column:
+                  name: middle_name
+                  type: varchar(255)
+              - column:
+                  name: employerinn
+                  type: varchar(255)
+              - column:
+                  name: employment_status
+                  type: integer
+              - column:
+                  name: position
+                  type: integer
+              - column:
+                  name: salary
+                  type: numeric(19,2)
+              - column:
+                  name: work_experience_current
+                  type: integer
+              - column:
+                  name: work_experience_total
+                  type: integer
+              - column:
+                  name: issue_branch
+                  type: varchar(255)
+              - column:
+                  name: issue_date
+                  type: date
+              - column:
+                  name: number
+                  type: varchar(255)
+              - column:
+                  name: series
+                  type: varchar(255)
+
