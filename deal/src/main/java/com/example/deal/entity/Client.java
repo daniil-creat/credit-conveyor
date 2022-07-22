@@ -33,6 +33,4 @@ public class Client {
     @Embedded
     private EmploymentDTO employment;
     private String account;
-
-
 }

@@ -4,6 +4,7 @@ import com.example.deal.dto.ApplicationStatusHistoryDTO;
 import com.example.deal.dto.LoanOfferDTO;
 import com.example.deal.entity.Application;
 import com.example.deal.entity.Client;
+import com.example.deal.entity.Credit;
 import com.example.deal.enums.Status;
 import com.example.deal.repository.ApplicationRepository;
 import com.example.deal.services.ApplicationService;
@@ -67,6 +68,19 @@ public class ApplicationServiceImpl implements ApplicationService {
         Application savedApplication = applicationRepository.save(application);
         log.info("Service: Application, updateApplicationByLoanOffer method, return:{}", savedApplication);
         return savedApplication;
+    }
+
+    @Override
+    public Application updateByCredit(Credit credit, Long id) {
+        log.info("Service: Application, updateApplicationByClient method, return:{}", credit);
+        Application application = applicationRepository.findById(id).get();
+        application.setCredit(credit);
+        return applicationRepository.save(application);
+    }
+
+    @Override
+    public Application update(Application application) {
+        return applicationRepository.save(application);
     }
 
     @Override

@@ -2,7 +2,10 @@ package com.example.deal.entity;
 
 import com.example.deal.dto.PaymentScheduleElement;
 import com.example.deal.enums.CreditStatus;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -11,6 +14,9 @@ import java.util.List;
 @Data
 @Entity
 @Table(name = "credit")
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Credit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
