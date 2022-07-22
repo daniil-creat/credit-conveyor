@@ -129,7 +129,7 @@ public class DealControllerTest {
                 .build();
 
         EmploymentDTO employmentDTO = EmploymentDTO.builder()
-                .employmentStatus(EmploymentStatus.EMPLOYED)
+                .employmentStatus(EmploymentStatus.EMPLOYEE)
                 .employerINN("312434134")
                 .position(Position.WORKER)
                 .workExperienceTotal(2)

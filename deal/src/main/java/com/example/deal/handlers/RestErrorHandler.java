@@ -1,6 +1,8 @@
 package com.example.deal.handlers;
 
 import com.example.deal.dto.ErrorDTO;
+import com.example.deal.services.EmailSevice;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,6 +11,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @ControllerAdvice
 @Log4j2
+@RequiredArgsConstructor
 public class RestErrorHandler {
 
     @ExceptionHandler(RuntimeException.class)

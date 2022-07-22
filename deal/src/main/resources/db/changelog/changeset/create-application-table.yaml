@@ -21,6 +21,13 @@ databaseChangeLog:
                     referencedTableName: client
                     referencedColumnNames: id
               - column:
+                  name: credit_id
+                  type: bigint
+                  constraints:
+                    foreignKeyName: fk_credit_id
+                    referencedTableName: credit
+                    referencedColumnNames: id
+              - column:
                   name: is_insurance_enabled
                   type: boolean
               - column:

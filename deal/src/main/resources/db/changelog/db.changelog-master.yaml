@@ -2,10 +2,10 @@ databaseChangeLog:
   - include:
       file: db/changelog/changeset/create-client-table.yaml
   - include:
+      file: db/changelog/changeset/create-credit-table.yaml
+  - include:
       file: db/changelog/changeset/create-application-table.yaml
   - include:
       file: db/changelog/changeset/create-history-table.yaml
-  - include:
-      file: db/changelog/changeset/create-credit-table.yaml
   - include:
       file: db/changelog/changeset/create-payment-table.yaml

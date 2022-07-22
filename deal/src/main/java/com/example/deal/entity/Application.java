@@ -22,6 +22,8 @@ public class Application {
 
     @OneToOne(fetch = FetchType.EAGER)
     private Client client;
+    @OneToOne(fetch = FetchType.EAGER)
+    private Credit credit;
     private Status status;
     private LocalDate creationDate;
 
