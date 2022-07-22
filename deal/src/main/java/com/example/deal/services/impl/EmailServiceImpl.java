@@ -22,6 +22,7 @@ public class EmailServiceImpl implements EmailSevice {
 
     @Override
     public void sendMessageForFinishRegistration(Application application) {
+        log.info("Service: Email,sendMessageForFinishRegistration method, parameters: {}", application);
         producer.sendMessage(EmailMessage.builder().address(application.getClient().getEmail())
                 .theme(Theme.FINISH_REGISTRATION)
                 .applicationId(application.getId())
@@ -30,6 +31,7 @@ public class EmailServiceImpl implements EmailSevice {
 
     @Override
     public void sendMessageForFinishRegistrationById(Long id) {
+        log.info("Service: Email,sendMessageForFinishRegistrationById method, parameters: {}", id);
         Application application = applicationService.findById(id);
         producer.sendMessageForCreateDocuments(EmailMessage.builder().address(application.getClient().getEmail())
                 .theme(Theme.CREATE_DOCUMENT)
@@ -39,6 +41,7 @@ public class EmailServiceImpl implements EmailSevice {
 
     @Override
     public void sendMessageForCreateDocuments(Long applicationId, File fileClient, File fileCredit, File filePayment) {
+        log.info("Service: Email,sendMessageForCreateDocuments method, parameters: {}, {},{},{}", applicationId, fileClient, fileCredit, filePayment);
         Application application = applicationService.findById(applicationId);
         producer.sendMessageForSendDocument(EmailMessage.builder().address(application.getClient().getEmail())
                 .theme(Theme.DOCUMENTS)
@@ -51,6 +54,7 @@ public class EmailServiceImpl implements EmailSevice {
 
     @Override
     public void sendMessageWithCode(Long id, String code) {
+        log.info("Service: Email,sendMessageWithCode method, parameters: {}, {}", id, code);
         Application application = applicationService.findById(id);
         producer.sendMessageForSign(EmailMessage.builder().address(application.getClient().getEmail())
                 .theme(Theme.SIGN)
@@ -60,8 +64,9 @@ public class EmailServiceImpl implements EmailSevice {
     }
 
     @Override
-    public void sendMessageAboutAnswer(Boolean answer,Long id) {
-        if(answer == true) {
+    public void sendMessageAboutAnswer(Boolean answer, Long id) {
+        log.info("Service: Email,sendMessageAboutAnswer method, parameters: {}, {}", answer, id);
+        if (answer == true) {
             Application application = applicationService.findById(id);
             producer.sendMessageAnswer(EmailMessage.builder().address(application.getClient().getEmail())
                     .theme(Theme.ANSWER)
@@ -73,6 +78,7 @@ public class EmailServiceImpl implements EmailSevice {
 
     @Override
     public void sendMessageAboutDenied(Long id) {
+        log.info("Service: Email,sendMessageAboutDenied method, parameters: {}", id);
         Application application = applicationService.findById(id);
         producer.sendMessageAboutDenied(EmailMessage.builder().address(application.getClient().getEmail())
                 .theme(Theme.ANSWER)

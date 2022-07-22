@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 @Service
@@ -22,6 +24,8 @@ public class DealServiceImpl implements DealService {
     private final CreditService creditService;
     private final ServiceProxy serviceProxy;
     private final EmailSevice emailService;
+    private final DocumentService documentService;
+    private final EmailSevice emailSevice;
 
     @Override
     public List<LoanOfferDTO> calculatingLoanOffers(LoanApplicationRequestDTO loanApplicationRequest) {
@@ -38,7 +42,9 @@ public class DealServiceImpl implements DealService {
     public Application calculatingLoanOffer(LoanOfferDTO loanOffer) {
         log.info("Service: Deal,calculatingLoanOffer method, parameters: {}", loanOffer);
         Application application = applicationService.findById(loanOffer.getApplicationId());
-        return applicationService.updateApplicationByLoanOffer(application, loanOffer);
+        Application updatedApplication = applicationService.updateApplicationByLoanOffer(application, loanOffer);
+        log.info("Service: Deal,calculatingLoanOffer method, return: {}", updatedApplication);
+        return updatedApplication;
     }
 
     @Override
@@ -67,31 +73,49 @@ public class DealServiceImpl implements DealService {
                 .build();
         clientService.updateClient(scoringDataDTO, client.getId());
         CreditDTO creditDTO = serviceProxy.getCredit(scoringDataDTO);
-        if(creditDTO == null){
+        if (creditDTO == null) {
+            log.info("Start send message about denied");
             emailService.sendMessageAboutDenied(applicationId);
         }
         Credit credit = creditService.saveCredit(creditDTO);
-        applicationService.updateByCredit(credit, applicationId);
+        Application updatedApplication = applicationService.updateByCredit(credit, applicationId);
+        log.info("Service: Deal,calculatingCredit method, updatedApplication: {}", updatedApplication);
     }
 
     @Override
-    public String generateCode(Long applicationId) {
+    public void createDocumentAndSendMessage(Long applicationId) throws IOException {
+        log.info("Start method createDocumentAndSendMessage, Deal, parametr: {} ", applicationId);
+        File fileClient = documentService.generetedDocumentAndGetFileClientInfo(applicationId);
+        File fileCredit = documentService.generetedDocumentAndGetFileCreditInfo(applicationId);
+        File filePayment = documentService.generetedDocumentAndGetFilePaymentInfo(applicationId);
+        log.info("Start send message for send-documents");
+        emailSevice.sendMessageForCreateDocuments(applicationId, fileClient, fileCredit, filePayment);
+    }
+
+    @Override
+    public void generateCodeAndSendMessage(Long applicationId) {
+        log.info("Service: Deal,generateCodeAndSendMessage method, parameters: {}", applicationId);
         int max = 9999;
         int min = 1000;
         Integer code = (int) (Math.random() * ++max) + min;
         Application application = applicationService.findById(applicationId);
         application.setSesCode(code.toString());
         applicationService.update(application);
-        return code.toString();
+        log.info("Start send message for send-sign");
+        emailSevice.sendMessageWithCode(applicationId, code.toString());
     }
 
     @Override
-    public Boolean checkCode(String code, Long id) {
-        Application application = applicationService.findById(id);
-        if (application.getSesCode().equals(code))
-            return true;
-        else return false;
+    public void checkCodeAndSendAnswer(Long applicationId, String code) {
+        log.info("Service: Deal,checkCodeAndSendAnswer method, parameters: {},{}", code, applicationId);
+        boolean answer = false;
+        Application application = applicationService.findById(applicationId);
+        if (application.getSesCode().equals(code)) {
+            answer = true;
+        } else {
+            answer = false;
+        }
+        log.info("Start send message for credit-issued");
+        emailSevice.sendMessageAboutAnswer(answer, applicationId);
     }
-
-
 }

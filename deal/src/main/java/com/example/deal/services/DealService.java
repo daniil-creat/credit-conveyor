@@ -6,12 +6,14 @@ import com.example.deal.dto.LoanApplicationRequestDTO;
 import com.example.deal.dto.LoanOfferDTO;
 import com.example.deal.entity.Application;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface DealService {
     List<LoanOfferDTO> calculatingLoanOffers(LoanApplicationRequestDTO loanApplicationRequest);
     Application calculatingLoanOffer(LoanOfferDTO loanOffer);
     void calculatingCredit(FinishRegistrationRequestDTO finishRegistrationRequest, Long applicationId);
-    String generateCode(Long applicationId);
-    Boolean checkCode(String code, Long id);
+    void createDocumentAndSendMessage(Long id) throws IOException;
+    void generateCodeAndSendMessage(Long id);
+    void checkCodeAndSendAnswer(Long applicationId, String code);
 }

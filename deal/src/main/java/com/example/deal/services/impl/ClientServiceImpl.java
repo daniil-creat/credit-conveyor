@@ -44,6 +44,7 @@ public class ClientServiceImpl implements ClientService {
 
     @Override
     public Client updateClient(ScoringDataDTO scoringData, Long id) {
+        log.info("Service: Client, updateClient method, parameters:{}, {}", scoringData, id);
         Passport passport = Passport.builder()
                 .series(scoringData.getPassportSeries())
                 .number(scoringData.getPassportNumber())
@@ -62,6 +63,8 @@ public class ClientServiceImpl implements ClientService {
         client.setEmployment(employment);
         client.setDependentAmount(scoringData.getDependentAmount());
         client.setPassport(passport);
-        return clientRepository.save(client);
+        Client clientSaved = clientRepository.save(client);
+        log.info("Service: Client, updateClient method, return:{}", clientSaved);
+        return clientSaved;
     }
 }

@@ -72,15 +72,20 @@ public class ApplicationServiceImpl implements ApplicationService {
 
     @Override
     public Application updateByCredit(Credit credit, Long id) {
-        log.info("Service: Application, updateApplicationByClient method, return:{}", credit);
+        log.info("Service: Application, updateByCredit method, parametrs:{}, {}", credit, id);
         Application application = applicationRepository.findById(id).get();
         application.setCredit(credit);
-        return applicationRepository.save(application);
+        Application applicationSaved = applicationRepository.save(application);
+        log.info("Service: Application, updateByCredit method, return:{}", applicationSaved);
+        return applicationSaved;
     }
 
     @Override
     public Application update(Application application) {
-        return applicationRepository.save(application);
+        log.info("Service: Application, update method, parametr:{}", application);
+        Application applicationSaved = applicationRepository.save(application);
+        log.info("Service: Application, updateByCredit method, return:{}", applicationSaved);
+        return applicationSaved;
     }
 
     @Override
